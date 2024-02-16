@@ -2,6 +2,7 @@ package com.example.firstviewsactivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Spinner
 import com.example.firstviewsactivity.databinding.ActivityMainBinding
 import org.json.JSONArray
 import java.io.IOException
@@ -23,8 +24,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    val spinner : Spinner = binding.spinner
+
+
     private fun getCar(){
-        fetchData("https://ergast.com/api/f1/drivers.json?callback=myParser")
+        fetchData("https://ergast.com/api/f1/2023/drivers.json")
     }
 
     private fun processQuoteJson(jsonString:String) : String{
@@ -35,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private fun fetchData(urlString: String){
         val thread = Thread{
             try {
+
                 val url = URL(urlString)
                 val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
                 connection.connectTimeout = 10000
@@ -47,8 +52,7 @@ class MainActivity : AppCompatActivity() {
                     val scanner = Scanner(connection.inputStream).useDelimiter("\\A")
                     val text = if (scanner.hasNext()) scanner.next() else ""
 
-                    val quote = processQuoteJson(text)
-                    updateTextView(quote)
+                    //updateTextView(quote)
                 } else {
                     updateTextView("The server returned an error: $responseCode")
                 }
