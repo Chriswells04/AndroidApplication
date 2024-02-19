@@ -47,4 +47,10 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="spinnertextview">TextView</string>
+    <string name="enter">Enter</string>
+    <string name="back">Back</string>
+    <string name="refresh">Refresh</string>
+    <string name="go">Go</string>
+    <string name="displays_picture_of_game_selected">Displays picture of game selected</string>
+    <string name="game_thumbnail">game thumbnail</string>
 </resources>

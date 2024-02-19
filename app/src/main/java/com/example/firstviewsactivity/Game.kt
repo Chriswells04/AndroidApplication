@@ -1,6 +1,6 @@
 package com.example.firstviewsactivity
 
-data class Games (
+data class Game (
     val name: String,
-    //val thumbnail: String
+    val thumbnail: String
 )
