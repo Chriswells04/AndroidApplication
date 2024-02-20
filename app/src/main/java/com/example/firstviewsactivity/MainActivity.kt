@@ -16,7 +16,9 @@ import java.util.Scanner
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val list = mutableListOf<String>()
+    private val listTitle = mutableListOf<String>()
+    private val listThumbnail = mutableListOf<String>()
+    private lateinit var game: Game
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,18 +26,34 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.button.setOnClickListener{
-            getUpdate()
+
+        fetchData("https://www.freetogame.com/api/games?platform=pc")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item , listTitle)
+        binding.spinner.adapter = adapter
+
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+
+                Toast.makeText(this@MainActivity, "Game Selected: " + listTitle[position], Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
         }
 
         binding.action.setOnClickListener{
             val intent = Intent(this, SpinnerActivity::class.java )
+            intent.putExtra("object",game)
             startActivity(intent)
         }
-    }
 
-    private fun getUpdate(){
-        fetchData("https://www.freetogame.com/api/games?platform=pc")
+        updateSpinner()
     }
 
     private fun processQuoteJson(jsonString: String) : MutableList<String>{
@@ -44,10 +62,10 @@ class MainActivity : AppCompatActivity() {
             val jsonObject = jsonArray.getJSONObject(i)
             val title = jsonObject.getString("title")
             val thumbnail = jsonObject.getString("thumbnail")
-            val g = Game(title, thumbnail)
-            list.add(g.name)
+            listThumbnail.add(thumbnail)
+            listTitle.add(title)
         }
-        return list
+        return listTitle
     }
 
     private fun fetchData(urlString: String){
@@ -66,7 +84,8 @@ class MainActivity : AppCompatActivity() {
                     val text = if (scanner.hasNext()) scanner.next() else ""
 
                     val quote = processQuoteJson(text)
-                    updateSpinner(quote)
+                    updateSpinner()
+                    updateTextView(quote[0])
 
                 } else {
                     updateTextView("The server returned an error: $responseCode")
@@ -84,9 +103,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateSpinner(list: MutableList<String>){
+    private fun updateSpinner(){
         runOnUiThread {
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item , list)
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item , listTitle)
             binding.spinner.adapter = adapter
 
             binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -96,7 +115,8 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
                 ) {
-                    Toast.makeText(this@MainActivity, "Game Selected: " + list[position], Toast.LENGTH_SHORT).show()
+                    game = Game(listTitle[position], listThumbnail[position])
+                    Toast.makeText(this@MainActivity, "Game Selected: " + listTitle[position], Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
