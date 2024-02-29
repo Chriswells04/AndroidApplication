@@ -6,11 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
-import com.example.firstviewsactivity.databinding.ActivitySpinnerBinding
 import com.example.firstviewsactivity.databinding.ActivityWebBinding
 
 
-class webActivity : AppCompatActivity() {
+class WebActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWebBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
