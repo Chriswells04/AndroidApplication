@@ -4,5 +4,6 @@ import java.io.Serializable
 
 data class Game(
     val name: String,
-    val thumbnail: String
+    val thumbnail: String,
+    val gameUrl: String
 ) : Serializable

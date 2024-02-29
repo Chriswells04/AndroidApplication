@@ -1,12 +1,15 @@
 package com.example.firstviewsactivity
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.firstviewsactivity.databinding.ActivityMainBinding
 import org.json.JSONArray
 import java.io.IOException
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val listTitle = mutableListOf<String>()
     private val listThumbnail = mutableListOf<String>()
+    private val listUrl = mutableListOf<String>()
     private lateinit var game: Game
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +32,10 @@ class MainActivity : AppCompatActivity() {
 
 
         fetchData("https://www.freetogame.com/api/games?platform=pc")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item , listTitle)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listTitle)
         binding.spinner.adapter = adapter
 
-        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -39,7 +43,11 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
 
-                Toast.makeText(this@MainActivity, "Game Selected: " + listTitle[position], Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Game Selected: " + listTitle[position],
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -47,29 +55,32 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.action.setOnClickListener{
-            val intent = Intent(this, SpinnerActivity::class.java )
-            intent.putExtra("object",game)
+        binding.action.setOnClickListener {
+            val intent = Intent(this, SpinnerActivity::class.java)
+            intent.putExtra("object", game)
             startActivity(intent)
         }
 
         updateSpinner()
     }
 
-    private fun processQuoteJson(jsonString: String) : MutableList<String>{
+    private fun processQuoteJson(jsonString: String): MutableList<String> {
         val jsonArray = JSONArray(jsonString)
-        for (i in 0..<jsonArray.length()){
+        for (i in 0..<jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
             val title = jsonObject.getString("title")
             val thumbnail = jsonObject.getString("thumbnail")
+            val gameUrl = jsonObject.getString("game_url")
+
             listThumbnail.add(thumbnail)
             listTitle.add(title)
+            listUrl.add(gameUrl)
         }
         return listTitle
     }
 
-    private fun fetchData(urlString: String){
-        val thread = Thread{
+    private fun fetchData(urlString: String) {
+        val thread = Thread {
             try {
                 val url = URL(urlString)
                 val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
@@ -79,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 connection.connect()
 
                 val responseCode = connection.responseCode
-                if (responseCode == HttpURLConnection.HTTP_OK){
+                if (responseCode == HttpURLConnection.HTTP_OK) {
                     val scanner = Scanner(connection.inputStream).useDelimiter("\\A")
                     val text = if (scanner.hasNext()) scanner.next() else ""
 
@@ -90,33 +101,38 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     updateTextView("The server returned an error: $responseCode")
                 }
-            } catch (e: IOException){
+            } catch (e: IOException) {
                 updateTextView("An error occurred updating data from the server")
             }
         }
         thread.start()
     }
 
-    private fun updateTextView(text:String){
+    private fun updateTextView(text: String) {
         runOnUiThread {
             binding.textView.text = text
         }
     }
 
-    private fun updateSpinner(){
+    private fun updateSpinner() {
         runOnUiThread {
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item , listTitle)
+            val adapter =
+                ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listTitle)
             binding.spinner.adapter = adapter
 
-            binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
                     position: Int,
                     id: Long
                 ) {
-                    game = Game(listTitle[position], listThumbnail[position])
-                    Toast.makeText(this@MainActivity, "Game Selected: " + listTitle[position], Toast.LENGTH_SHORT).show()
+                    game = Game(listTitle[position], listThumbnail[position], listUrl[position])
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Game Selected: " + listTitle[position],
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
