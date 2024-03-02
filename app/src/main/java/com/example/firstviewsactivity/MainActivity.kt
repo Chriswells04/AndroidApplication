@@ -3,6 +3,7 @@ package com.example.firstviewsactivity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -10,6 +11,7 @@ import android.widget.Toast
 import com.example.firstviewsactivity.databinding.ActivityMainBinding
 import org.json.JSONArray
 import java.io.IOException
+import java.io.ObjectInputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Scanner
@@ -59,6 +61,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateSpinner()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        //saveList()
+        super.onSaveInstanceState(outState, outPersistentState)
     }
 
     private fun processQuoteJson(jsonString: String): MutableList<String> {

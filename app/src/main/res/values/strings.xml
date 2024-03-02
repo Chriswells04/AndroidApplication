@@ -54,4 +54,6 @@
     <string name="displays_picture_of_game_selected">Displays picture of game selected</string>
     <string name="game_thumbnail">game thumbnail</string>
     <string name="maintext">MainText</string>
+    <string name="free_games">Free Games</string>
+    <string name="select_below_to_find_out_more_about_a_free_game">Select below to find out more about a free game</string>
 </resources>
