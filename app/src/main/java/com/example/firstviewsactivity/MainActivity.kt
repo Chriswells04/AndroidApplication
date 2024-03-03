@@ -1,17 +1,17 @@
 package com.example.firstviewsactivity
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.firstviewsactivity.databinding.ActivityMainBinding
 import org.json.JSONArray
 import java.io.IOException
-import java.io.ObjectInputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Scanner
@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private val listThumbnail = mutableListOf<String>()
     private val listUrl = mutableListOf<String>()
     private lateinit var game: Game
+    private lateinit var adapter : RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +61,23 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.previous.setOnClickListener {
+            addItem()
+        }
+
         updateSpinner()
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        //saveList()
-        super.onSaveInstanceState(outState, outPersistentState)
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if (it.resultCode == Activity.RESULT_OK){
+            val newItem = it.data?.getSerializableExtra("item") as Game
+            adapter.addItem(newItem)
+        }
+    }
+
+    private fun addItem(){
+        val intent = Intent(this, PreviousActivity::class.java)
+        resultLauncher.launch(intent)
     }
 
     private fun processQuoteJson(jsonString: String): MutableList<String> {

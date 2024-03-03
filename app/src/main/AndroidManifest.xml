@@ -15,6 +15,9 @@
         android:theme="@style/Theme.FirstViewsActivity"
         tools:targetApi="31">
         <activity
+            android:name=".PreviousActivity"
+            android:exported="false" />
+        <activity
             android:name=".WebActivity"
             android:exported="false" />
         <activity

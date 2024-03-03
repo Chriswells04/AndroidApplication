@@ -56,4 +56,7 @@
     <string name="maintext">MainText</string>
     <string name="free_games">Free Games</string>
     <string name="select_below_to_find_out_more_about_a_free_game">Select below to find out more about a free game</string>
+    <string name="filler">filler</string>
+    <string name="game_image">game image</string>
+    <string name="game_title">game title</string>
 </resources>
