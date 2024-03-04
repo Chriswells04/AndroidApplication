@@ -1,6 +1,6 @@
 package com.example.firstviewsactivity
 
-import android.app.Activity
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.firstviewsactivity.databinding.ActivityMainBinding
 import org.json.JSONArray
 import java.io.IOException
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val listThumbnail = mutableListOf<String>()
     private val listUrl = mutableListOf<String>()
     private lateinit var game: Game
-    private lateinit var adapter : RecyclerAdapter
+    private lateinit var dataManager: DataManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +29,17 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        binding.action.setOnClickListener {
+            dataManager.add(game)
+            val intent = Intent(this, SpinnerActivity::class.java)
+            intent.putExtra("object", game)
+            startActivity(intent)
+        }
+
+        binding.previous.setOnClickListener {
+            val intent = Intent(this, PreviousActivity::class.java)
+            startActivity(intent)
+        }
 
         fetchData("https://www.freetogame.com/api/games?platform=pc")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listTitle)
@@ -54,30 +64,9 @@ class MainActivity : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         }
-
-        binding.action.setOnClickListener {
-            val intent = Intent(this, SpinnerActivity::class.java)
-            intent.putExtra("object", game)
-            startActivity(intent)
-        }
-
-        binding.previous.setOnClickListener {
-            addItem()
-        }
-
         updateSpinner()
-    }
 
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        if (it.resultCode == Activity.RESULT_OK){
-            val newItem = it.data?.getSerializableExtra("item") as Game
-            adapter.addItem(newItem)
-        }
-    }
-
-    private fun addItem(){
-        val intent = Intent(this, PreviousActivity::class.java)
-        resultLauncher.launch(intent)
+        dataManager = DataManager(this)
     }
 
     private fun processQuoteJson(jsonString: String): MutableList<String> {
@@ -87,7 +76,6 @@ class MainActivity : AppCompatActivity() {
             val title = jsonObject.getString("title")
             val thumbnail = jsonObject.getString("thumbnail")
             val gameUrl = jsonObject.getString("game_url")
-
             listThumbnail.add(thumbnail)
             listTitle.add(title)
             listUrl.add(gameUrl)

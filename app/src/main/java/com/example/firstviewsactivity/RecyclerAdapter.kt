@@ -12,7 +12,10 @@ import com.example.firstviewsactivity.databinding.HistoryCardLayoutBinding
 
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
     var list = mutableListOf<Game>()
-
+    init{
+       // list.add(Game("Overwatch 2", "https://www.freetogame.com/g/540/thumbnail.jpg", ""))
+        //list.add(Game("Overwatch 2", "https://www.freetogame.com/g/540/thumbnail.jpg", ""))
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val binding = HistoryCardLayoutBinding.bind(itemView)
@@ -25,9 +28,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return list.count()
     }
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cardView = holder.binding
@@ -41,5 +43,9 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
     fun addItem(item : Game){
         list.add(item)
         notifyItemInserted(list.lastIndex)
+    }
+
+    fun updateListOfGames (games: MutableList<Game>){
+        list = games
     }
 }

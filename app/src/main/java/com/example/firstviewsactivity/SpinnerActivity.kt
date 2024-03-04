@@ -12,6 +12,7 @@ import com.example.firstviewsactivity.databinding.ActivitySpinnerBinding
 @Suppress("DEPRECATION")
 class SpinnerActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySpinnerBinding
+
     private var prevUrl : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +26,7 @@ class SpinnerActivity : AppCompatActivity() {
         Glide.with(this).load(thumbnail).into(binding.imageView)
 
         val url = game.gameUrl
+
         binding.gotosite.setOnClickListener{
             loadWebActivity(url)
         }
