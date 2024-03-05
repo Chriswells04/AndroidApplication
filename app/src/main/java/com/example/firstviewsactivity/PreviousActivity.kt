@@ -1,18 +1,13 @@
 package com.example.firstviewsactivity
 
 
-
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firstviewsactivity.databinding.ActivityPreviousBinding
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
+
 
 class PreviousActivity : AppCompatActivity() {
 
@@ -36,48 +31,7 @@ class PreviousActivity : AppCompatActivity() {
         binding.historyrv.adapter = adapter
 
         handleDragging()
-        loadList()
 
-    }
-
-
-    private fun saveList(){
-        val fileOutputStream = openFileOutput("previous.dat", Context.MODE_PRIVATE)
-        val objectOutputStream = ObjectOutputStream(fileOutputStream)
-        objectOutputStream.writeObject(adapter.list)
-        objectOutputStream.close()
-        fileOutputStream.close()
-    }
-
-    private fun loadList(){
-        try{
-            val fileInputStream = openFileInput("previous.dat")
-            val objectInputStream = ObjectInputStream(fileInputStream)
-
-
-            val list = objectInputStream.readObject() as? MutableList<Game>
-
-            if (list != null){
-                adapter.list = list
-            }
-            objectInputStream.close()
-            fileInputStream.close()
-        }
-        catch (e:java.io.FileNotFoundException){
-            // loading has failed
-            Toast.makeText(this, "No existing list found", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-
-        saveList()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        saveList()
     }
 
     private fun handleDragging() {
@@ -108,6 +62,5 @@ class PreviousActivity : AppCompatActivity() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
         }
-
     }
 }

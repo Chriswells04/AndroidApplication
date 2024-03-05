@@ -12,9 +12,18 @@ class DataManager(context: Context) {
         db.execSQL(gamesCreateQuery)
     }
 
+    private fun checkGameExists(game:Game):Boolean{
+        val checkQuery = "SELECT * FROM Games WHERE name = '${game.name}'"
+        val cursor = db.rawQuery(checkQuery, null)
+        val boolVal = cursor.moveToFirst()
+        cursor.close()
+        return boolVal
+    }
     fun add(game: Game){
-        val query = "INSERT INTO Games (name, thumbnail, gameurl) VALUES ('${game.name}','${game.thumbnail}','${game.gameUrl}')"
-        db.execSQL(query)
+        if (!checkGameExists(game)){
+            val query = "INSERT INTO Games (name, thumbnail, gameurl) VALUES ('${game.name}','${game.thumbnail}','${game.gameUrl}')"
+            db.execSQL(query)
+        }
     }
 
     fun allGames() : MutableList<Game>{

@@ -1,6 +1,5 @@
 package com.example.firstviewsactivity
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.firstviewsactivity.databinding.HistoryCardLayoutBinding
 
-
-
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
-    var list = mutableListOf<Game>()
-    init{
-       // list.add(Game("Overwatch 2", "https://www.freetogame.com/g/540/thumbnail.jpg", ""))
-        //list.add(Game("Overwatch 2", "https://www.freetogame.com/g/540/thumbnail.jpg", ""))
-    }
+    private var list = mutableListOf<Game>()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val binding = HistoryCardLayoutBinding.bind(itemView)
@@ -37,12 +30,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
 
         cardView.gametitle.text = item.name
         Glide.with(holder.itemView).load(item.thumbnail).into(cardView.imageView2)
-
-    }
-
-    fun addItem(item : Game){
-        list.add(item)
-        notifyItemInserted(list.lastIndex)
     }
 
     fun updateListOfGames (games: MutableList<Game>){

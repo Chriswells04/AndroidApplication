@@ -23,14 +23,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var game: Game
     private lateinit var dataManager: DataManager
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
+        dataManager = DataManager(this)
         setContentView(view)
 
         binding.action.setOnClickListener {
             dataManager.add(game)
+
             val intent = Intent(this, SpinnerActivity::class.java)
             intent.putExtra("object", game)
             startActivity(intent)
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.previous.setOnClickListener {
             val intent = Intent(this, PreviousActivity::class.java)
+
             startActivity(intent)
         }
 
@@ -66,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
         updateSpinner()
 
-        dataManager = DataManager(this)
+
     }
 
     private fun processQuoteJson(jsonString: String): MutableList<String> {
