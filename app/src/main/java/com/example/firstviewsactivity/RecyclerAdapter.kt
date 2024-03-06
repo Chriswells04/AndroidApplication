@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.firstviewsactivity.databinding.HistoryCardLayoutBinding
 
+// creates an adapter to display data to the RecyclerView
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
-    private var list = mutableListOf<Game>()
+    var list = mutableListOf<Game>()
+
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val binding = HistoryCardLayoutBinding.bind(itemView)
@@ -20,10 +22,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
         return ViewHolder(view)
     }
 
+    // returns the size of the list
     override fun getItemCount(): Int {
         return list.count()
     }
 
+    // connects to the card layout to display each object with its data
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cardView = holder.binding
         val item = list[position]
@@ -32,6 +36,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
         Glide.with(holder.itemView).load(item.thumbnail).into(cardView.imageView2)
     }
 
+    // updates the list for the recycler view
     fun updateListOfGames (games: MutableList<Game>){
         list = games
     }

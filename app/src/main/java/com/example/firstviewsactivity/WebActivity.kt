@@ -22,11 +22,12 @@ class WebActivity : AppCompatActivity() {
         val url = intent.getStringExtra("url")
         binding.webView.webViewClient = WebViewClient() // prevents opening in browser app
         binding.webView.settings.javaScriptEnabled = true // required for search functionality in certain sites
-        binding.webView.loadUrl(url!!)
+        binding.webView.loadUrl(url!!) // loads the website from the url
 
         onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
+    // returns the url when the user presses the back button on their device
     private val backPressedCallback = object: OnBackPressedCallback(true){
         override fun handleOnBackPressed() {
             val intent = Intent()

@@ -33,6 +33,7 @@ class SpinnerActivity : AppCompatActivity() {
 
     }
 
+    // enables button visibility if url exists others disables the button visibility
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
         if (result.resultCode == Activity.RESULT_OK){
@@ -46,6 +47,7 @@ class SpinnerActivity : AppCompatActivity() {
         }
     }
 
+    // loads the web activity for the selected object
     private fun loadWebActivity(url : String){
         val intent = Intent(this, WebActivity::class.java)
         intent.putExtra("url", url)

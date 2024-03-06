@@ -59,4 +59,6 @@
     <string name="filler">filler</string>
     <string name="game_image">game image</string>
     <string name="game_title">game title</string>
+    <string name="game_search_history">Game search history:</string>
+    <string name="open_website">Open Website</string>
 </resources>

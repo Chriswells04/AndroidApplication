@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         dataManager = DataManager(this)
         setContentView(view)
 
+        // opens activity with data select from the spinner
         binding.action.setOnClickListener {
             dataManager.add(game)
 
@@ -39,40 +40,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // opens activity to display recycler view of previous searches
         binding.previous.setOnClickListener {
             val intent = Intent(this, PreviousActivity::class.java)
-
             startActivity(intent)
         }
 
+        // fetches data from API
         fetchData("https://www.freetogame.com/api/games?platform=pc")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listTitle)
         binding.spinner.adapter = adapter
 
-        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                Toast.makeText(
-                    this@MainActivity,
-                    "Game Selected: " + listTitle[position],
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-        }
         updateSpinner()
-
-
     }
 
+    // process json string and sorts it into separate lists
     private fun processQuoteJson(jsonString: String): MutableList<String> {
         val jsonArray = JSONArray(jsonString)
         for (i in 0..<jsonArray.length()) {
@@ -87,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         return listTitle
     }
 
+    // fetches data from the api, ensures get response can time out if response takes too long
     private fun fetchData(urlString: String) {
         val thread = Thread {
             try {
@@ -116,12 +99,14 @@ class MainActivity : AppCompatActivity() {
         thread.start()
     }
 
+    // displays errors to user if requests fail or errors occur
     private fun updateTextView(text: String) {
         runOnUiThread {
             binding.textView.text = text
         }
     }
 
+    // updates the spinner populating it with data upon app being launched
     private fun updateSpinner() {
         runOnUiThread {
             val adapter =
