@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         return listTitle
     }
 
-    // code adapted
+    // code adapted from Yoshimitsu (2019)
     private fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val nw = connectivityManager.activeNetwork ?: return false
@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
             else -> false
         }
     }
+    // end of adapted code
 
     // fetches data from the api, ensures get response can time out if response takes too long
     private fun fetchData(urlString: String) {
