@@ -21,8 +21,6 @@ class PreviousActivity : AppCompatActivity()
 
     private lateinit var dataManager: DataManager
 
-    private var gameList = mutableListOf<Game>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPreviousBinding.inflate(layoutInflater)
@@ -36,7 +34,6 @@ class PreviousActivity : AppCompatActivity()
 
         adapter.updateListOfGames(dataManager.allGames())
         binding.historyrv.adapter = adapter
-        gameList = adapter.list
 
         handleDragging()
 
@@ -55,17 +52,15 @@ class PreviousActivity : AppCompatActivity()
                 refreshGames()
             }
         }
-
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(binding.historyrv)
     }
 
     // refreshes the recycler view to show items which are still currently in the database
     private fun refreshGames(){
-        gameList = dataManager.allGames()
+        adapter.list = dataManager.allGames()
         binding.historyrv.adapter = adapter
     }
-
         // create the ability for items in the recycler view to be moved
         inner class DragCallBack : ItemTouchHelper.Callback() {
             override fun getMovementFlags(
@@ -85,7 +80,6 @@ class PreviousActivity : AppCompatActivity()
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
             }
         }
 
