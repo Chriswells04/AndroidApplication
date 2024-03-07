@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
             // opens activity with data select from the spinner
             binding.action.setOnClickListener {
                 dataManager.add(game)
-
                 val intent = Intent(this, SpinnerActivity::class.java)
                 intent.putExtra("object", game)
                 startActivity(intent)

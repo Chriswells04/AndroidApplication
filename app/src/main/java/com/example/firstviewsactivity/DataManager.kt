@@ -3,9 +3,10 @@ package com.example.firstviewsactivity
 import android.content.Context
 
 import android.database.sqlite.SQLiteDatabase
+import android.widget.Toast
 
 
-class DataManager(context: Context) {
+class DataManager(private val context: Context) {
     private val db : SQLiteDatabase = context.openOrCreateDatabase("Games", Context.MODE_PRIVATE, null)
     init {
         val gamesCreateQuery = "CREATE TABLE IF NOT EXISTS `Games` ( `Name` TEXT NOT NULL, `Thumbnail` TEXT NOT NULL, `GameURL` TEXT NOT NULL,  PRIMARY KEY(`Name`))"
@@ -14,19 +15,26 @@ class DataManager(context: Context) {
 
     // checks if game exists already in database
     private fun checkGameExists(game:Game):Boolean{
-        val checkQuery = "SELECT * FROM Games WHERE name = '${game.name}'"
-        val cursor = db.rawQuery(checkQuery, null)
-        val boolVal = cursor.moveToFirst()
-        cursor.close()
-        return boolVal
+            val checkQuery = "SELECT * FROM Games WHERE name = '${game.name}'"
+            val cursor = db.rawQuery(checkQuery, null)
+
+            val boolVal = cursor.moveToFirst()
+            cursor.close()
+            return boolVal
     }
 
     // adds game to database if game does not already exist
     fun add(game: Game){
-        if (!checkGameExists(game)){
-            val query = "INSERT INTO Games (name, thumbnail, gameurl) VALUES ('${game.name}','${game.thumbnail}','${game.gameUrl}')"
-            db.execSQL(query)
+        if (!game.name.contains("'")){
+            if (!checkGameExists(game)){
+                val query = "INSERT INTO Games (name, thumbnail, gameurl) VALUES ('${game.name}','${game.thumbnail}','${game.gameUrl}')"
+                db.execSQL(query)
+            }
         }
+        else{
+            Toast.makeText(context, "Game cannot be saved to previous search", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     // deletes game from database
