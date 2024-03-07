@@ -1,7 +1,10 @@
 package com.example.firstviewsactivity
 
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -31,14 +34,29 @@ class MainActivity : AppCompatActivity() {
         dataManager = DataManager(this)
         setContentView(view)
 
-        // opens activity with data select from the spinner
-        binding.action.setOnClickListener {
-            dataManager.add(game)
+        // checks if internet is available
+        if (isNetworkAvailable(this)){
+            binding.refresh.visibility = View.INVISIBLE
+            // opens activity with data select from the spinner
+            binding.action.setOnClickListener {
+                dataManager.add(game)
 
-            val intent = Intent(this, SpinnerActivity::class.java)
-            intent.putExtra("object", game)
-            startActivity(intent)
+                val intent = Intent(this, SpinnerActivity::class.java)
+                intent.putExtra("object", game)
+                startActivity(intent)
+            }
+
+        }else{
+            binding.action.visibility = View.INVISIBLE
+            binding.refresh.visibility = View.VISIBLE
+
+            binding.refresh.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finishAffinity()
+            }
         }
+
 
         // opens activity to display recycler view of previous searches
         binding.previous.setOnClickListener {
@@ -67,6 +85,22 @@ class MainActivity : AppCompatActivity() {
             listUrl.add(gameUrl)
         }
         return listTitle
+    }
+
+    // code adapted
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val nw = connectivityManager.activeNetwork ?: return false
+        val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+        return when {
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            //for other device how are able to connect with Ethernet
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            //for check internet over Bluetooth
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+            else -> false
+        }
     }
 
     // fetches data from the api, ensures get response can time out if response takes too long
